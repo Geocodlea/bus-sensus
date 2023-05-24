@@ -17,6 +17,9 @@ export default function Form() {
   const [busNumber, setBusNumber] = useState("");
   const [route, setRoute] = useState("");
   const [station, setStation] = useState("");
+  const [busName, setBusName] = useState("");
+  const [routeName, setRouteName] = useState("");
+  const [stationName, setStationName] = useState("");
   const [people, setPeople] = useState("");
   const [isErrorPeople, setIsErrorPeople] = useState(false);
   const [buses, setBuses] = useState([]);
@@ -29,7 +32,7 @@ export default function Form() {
   useEffect(() => {
     const fetchBuses = async () => {
       try {
-        const response = await fetch("http://localhost:8080/bussensus/buses");
+        const response = await fetch("/api/buses");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -61,16 +64,15 @@ export default function Form() {
 
   const handleChangeBusNumber = async (event) => {
     setBusNumber(event.target.value);
-    setRoute("");
+    setBusName(buses.find((bus) => bus.busId === event.target.value).name);
 
+    setRoute("");
     setStation("");
 
     setIsSubmitted(false);
 
     try {
-      const fetchRoutes = await fetch(
-        `http://localhost:8080/bussensus/buses/${event.target.value}/routes`
-      );
+      const fetchRoutes = await fetch(`/api/buses/${event.target.value}`);
       if (!fetchRoutes.ok) {
         throw new Error("Network response was not ok");
       }
@@ -83,12 +85,14 @@ export default function Form() {
 
   const handleChangeRoute = async (event) => {
     setRoute(event.target.value);
+    setRouteName(
+      routes.find((route) => route.route_id === event.target.value).name
+    );
+
     setStation("");
 
     try {
-      const fetchStations = await fetch(
-        `http://localhost:8080/bussensus/buses/${busNumber}/routes/${event.target.value}/stations`
-      );
+      const fetchStations = await fetch(`/api/routes/${event.target.value}`);
       if (!fetchStations.ok) {
         throw new Error("Network response was not ok");
       }
@@ -101,6 +105,9 @@ export default function Form() {
 
   const handleChangeStation = (event) => {
     setStation(event.target.value);
+    setStationName(
+      stations.find((station) => station.stationId === event.target.value).name
+    );
   };
 
   const handleChangePeople = (event) => {
@@ -119,12 +126,15 @@ export default function Form() {
 
   const handleSubmit = async (event) => {
     try {
-      const response = await fetch("http://localhost:8080/bussensus/reports", {
+      const response = await fetch("/api/reports", {
         method: "POST",
         body: JSON.stringify({
           busId: busNumber,
+          busName: busName,
           routeId: route,
+          routeName: routeName,
           stationId: station,
+          stationName: stationName,
           noOfPassengers: people,
         }),
         headers: {
@@ -191,7 +201,7 @@ export default function Form() {
             >
               {routes &&
                 routes.map((item) => (
-                  <MenuItem key={item.routeId} value={item.routeId}>
+                  <MenuItem key={item.route_id} value={item.route_id}>
                     {item.name}
                   </MenuItem>
                 ))}

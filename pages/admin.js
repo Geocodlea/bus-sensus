@@ -22,7 +22,7 @@ export default function Admin() {
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const response = await fetch("http://localhost:8080/bussensus/reports");
+        const response = await fetch("/api/reports");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
