@@ -6,7 +6,6 @@ export default function App({ Component, pageProps }) {
       sx={{
         display: "flex",
         justifyContent: "center",
-        height: "100vh",
       }}
     >
       <Box sx={{ maxWidth: 700, width: 1 }}>
