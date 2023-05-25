@@ -17,7 +17,6 @@ export default async function handler(req, res) {
     });
 
     const report = new Report({
-      //  reportId: 1004,
       busId: req.body.busId,
       busName: req.body.busName,
       routeId: req.body.routeId,
