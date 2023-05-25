@@ -26,9 +26,9 @@ export default async function handler(req, res) {
 
     // Find the stations based on the station_ids
     const stations = await Station.find({ stationId: { $in: stationIds } });
+
     res.status(200).json(stations);
   } catch (error) {
-    console.error(error);
-    throw error;
+    res.status(500).json({ error: "Internal Server Error" });
   }
 }

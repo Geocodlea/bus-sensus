@@ -34,7 +34,7 @@ export default function Form() {
       try {
         const response = await fetch("/api/buses");
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("Error fetching buses");
         }
         const buses = await response.json();
         setBuses(buses);
@@ -49,7 +49,7 @@ export default function Form() {
   if (error) {
     return (
       <Typography variant="h5" color="#d32f2f" align="center" m={[3, 5]}>
-        Error: {error}
+        {error}
       </Typography>
     );
   }
@@ -74,7 +74,7 @@ export default function Form() {
     try {
       const fetchRoutes = await fetch(`/api/buses/${event.target.value}`);
       if (!fetchRoutes.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("Error fetching routes");
       }
       const routes = await fetchRoutes.json();
       setRoutes(routes);
@@ -94,7 +94,7 @@ export default function Form() {
     try {
       const fetchStations = await fetch(`/api/routes/${event.target.value}`);
       if (!fetchStations.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error("Error fetching stations");
       }
       const stations = await fetchStations.json();
       setStations(stations);
