@@ -241,14 +241,14 @@ export default function Form() {
             fullWidth
             inputProps={{
               min: 0,
-              max: 100,
+              max: 130,
               step: "1",
             }}
           />
         </Paper>
         {isErrorPeople && (
           <FormHelperText error>
-            Please enter a number between 0 and 100.
+            Please enter a number between 0 and 130.
           </FormHelperText>
         )}
         <Box align="right">
