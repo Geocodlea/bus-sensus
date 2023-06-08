@@ -166,11 +166,13 @@ export default function Form() {
               label="Bus number"
               onChange={handleChangeBus}
             >
-              {buses.map((item) => (
-                <MenuItem key={item.busId} value={item.name}>
-                  {item.name}
-                </MenuItem>
-              ))}
+              {buses
+                .sort((a, b) => a.busId - b.busId)
+                .map((item) => (
+                  <MenuItem key={item.busId} value={item.name}>
+                    {item.name}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
         </Paper>
