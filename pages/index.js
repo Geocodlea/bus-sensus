@@ -14,9 +14,6 @@ import {
 } from "@mui/material";
 
 export default function Form() {
-  const [busNumber, setBusNumber] = useState("");
-  const [route, setRoute] = useState("");
-  const [station, setStation] = useState("");
   const [busName, setBusName] = useState("");
   const [routeName, setRouteName] = useState("");
   const [stationName, setStationName] = useState("");
@@ -62,13 +59,11 @@ export default function Form() {
     );
   }
 
-  const handleChangeBusNumber = async (event) => {
-    setBusNumber(event.target.value);
-    setBusName(buses.find((bus) => bus.busId === event.target.value).name);
+  const handleChangeBus = async (event) => {
+    setBusName(event.target.value);
 
-    setRoute("");
-    setStation("");
-
+    setRouteName("");
+    setStationName("");
     setIsSubmitted(false);
 
     try {
@@ -84,12 +79,9 @@ export default function Form() {
   };
 
   const handleChangeRoute = async (event) => {
-    setRoute(event.target.value);
-    setRouteName(
-      routes.find((route) => route.route_id === event.target.value).name
-    );
+    setRouteName(event.target.value);
 
-    setStation("");
+    setStationName("");
 
     try {
       const fetchStations = await fetch(`/api/routes/${event.target.value}`);
@@ -104,10 +96,7 @@ export default function Form() {
   };
 
   const handleChangeStation = (event) => {
-    setStation(event.target.value);
-    setStationName(
-      stations.find((station) => station.stationId === event.target.value).name
-    );
+    setStationName(event.target.value);
   };
 
   const handleChangePeople = (event) => {
@@ -129,11 +118,8 @@ export default function Form() {
       const response = await fetch("/api/reports", {
         method: "POST",
         body: JSON.stringify({
-          busId: busNumber,
           busName: busName,
-          routeId: route,
           routeName: routeName,
-          stationId: station,
           stationName: stationName,
           noOfPassengers: people,
         }),
@@ -147,10 +133,9 @@ export default function Form() {
       }
 
       setIsSubmitted(true);
-      setBusNumber("");
-      setRoute("");
-
-      setStation("");
+      setBusName("");
+      setRouteName("");
+      setStationName("");
     } catch (error) {
       setError(error.message);
     }
@@ -177,12 +162,12 @@ export default function Form() {
             <InputLabel id="bus-number-label">Bus number</InputLabel>
             <Select
               labelId="bus-number-label"
-              value={busNumber}
+              value={busName}
               label="Bus number"
-              onChange={handleChangeBusNumber}
+              onChange={handleChangeBus}
             >
               {buses.map((item) => (
-                <MenuItem key={item.busId} value={item.busId}>
+                <MenuItem key={item.busId} value={item.name}>
                   {item.name}
                 </MenuItem>
               ))}
@@ -193,16 +178,16 @@ export default function Form() {
           <FormControl fullWidth>
             <InputLabel id="bus-route-label">Bus route</InputLabel>
             <Select
-              disabled={!busNumber}
+              disabled={!busName}
               labelId="bus-route-label"
-              value={route}
+              value={routeName}
               label="Bus route"
               onChange={handleChangeRoute}
             >
               {routes &&
                 routes.map((item) => (
-                  <MenuItem key={item.route_id} value={item.route_id}>
-                    {item.name}
+                  <MenuItem key={item.routeId} value={item.routeName}>
+                    {item.routeName}
                   </MenuItem>
                 ))}
             </Select>
@@ -212,16 +197,16 @@ export default function Form() {
           <FormControl fullWidth>
             <InputLabel id="station-label">Station</InputLabel>
             <Select
-              disabled={!busNumber || !route}
+              disabled={!busName || !routeName}
               labelId="station-label"
-              value={station}
+              value={stationName}
               label="Station"
               onChange={handleChangeStation}
             >
               {stations &&
-                stations.map((item) => (
-                  <MenuItem key={item.stationId} value={item.stationId}>
-                    {item.name}
+                stations.map((item, index) => (
+                  <MenuItem key={index} value={item}>
+                    {item}
                   </MenuItem>
                 ))}
             </Select>
@@ -257,7 +242,7 @@ export default function Form() {
             sx={{ width: "fit-content", marginBottom: "20px" }}
           >
             <Button
-              disabled={!station || !people || isErrorPeople}
+              disabled={!stationName || !people || isErrorPeople}
               onClick={handleSubmit}
               variant="outlined"
               size="large"

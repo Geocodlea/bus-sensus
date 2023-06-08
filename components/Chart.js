@@ -1,15 +1,15 @@
 import { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 
-const DataChart = ({ reports, busNumber, route, station }) => {
+const DataChart = ({ reports, busName, routeName, stationName }) => {
   const chartRef = useRef(null);
 
   useEffect(() => {
     const data = reports.filter((item) => {
       return (
-        item.busId === busNumber &&
-        item.routeId === route &&
-        item.stationId === station
+        item.busName === busName &&
+        item.routeName === routeName &&
+        item.stationName === stationName
       );
     });
 
@@ -74,7 +74,7 @@ const DataChart = ({ reports, busNumber, route, station }) => {
     return () => {
       chart.destroy();
     };
-  }, [reports, busNumber, route, station]);
+  }, [reports, busName, routeName, stationName]);
 
   return <canvas ref={chartRef} />;
 };

@@ -13,9 +13,9 @@ import Chart from "../components/Chart";
 
 export default function Admin() {
   const [reports, setReports] = useState([]);
-  const [busNumber, setBusNumber] = useState("");
-  const [route, setRoute] = useState("");
-  const [station, setStation] = useState("");
+  const [busName, setBusName] = useState("");
+  const [routeName, setRouteName] = useState("");
+  const [stationName, setStationName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -52,19 +52,19 @@ export default function Admin() {
     );
   }
 
-  const handleChangeBusNumber = async (event) => {
-    setBusNumber(event.target.value);
-    setRoute("");
-    setStation("");
+  const handleChangeBus = async (event) => {
+    setBusName(event.target.value);
+    setRouteName("");
+    setStationName("");
   };
 
   const handleChangeRoute = async (event) => {
-    setRoute(event.target.value);
-    setStation("");
+    setRouteName(event.target.value);
+    setStationName("");
   };
 
   const handleChangeStation = (event) => {
-    setStation(event.target.value);
+    setStationName(event.target.value);
   };
 
   return (
@@ -87,19 +87,19 @@ export default function Admin() {
             <InputLabel id="bus-number-label">Bus number</InputLabel>
             <Select
               labelId="bus-number-label"
-              value={busNumber}
+              value={busName}
               label="Bus number"
-              onChange={handleChangeBusNumber}
+              onChange={handleChangeBus}
             >
               {Object.values(
                 reports.reduce((acc, report) => {
-                  if (!acc[report.busId]) {
-                    acc[report.busId] = report;
+                  if (!acc[report.busName]) {
+                    acc[report.busName] = report;
                   }
                   return acc;
                 }, {})
               ).map((item) => (
-                <MenuItem key={item.reportId} value={item.busId}>
+                <MenuItem key={item.reportId} value={item.busName}>
                   {item.busName}
                 </MenuItem>
               ))}
@@ -110,23 +110,23 @@ export default function Admin() {
           <FormControl fullWidth>
             <InputLabel id="bus-route-label">Bus route</InputLabel>
             <Select
-              disabled={!busNumber}
+              disabled={!busName}
               labelId="bus-route-label"
-              value={route}
+              value={routeName}
               label="Bus route"
               onChange={handleChangeRoute}
             >
               {Object.values(
                 reports
-                  .filter((item) => item.busId === busNumber)
+                  .filter((item) => item.busName === busName)
                   .reduce((acc, report) => {
-                    if (!acc[report.routeId]) {
-                      acc[report.routeId] = report;
+                    if (!acc[report.routeName]) {
+                      acc[report.routeName] = report;
                     }
                     return acc;
                   }, {})
               ).map((item) => (
-                <MenuItem key={item.reportId} value={item.routeId}>
+                <MenuItem key={item.reportId} value={item.routeName}>
                   {item.routeName}
                 </MenuItem>
               ))}
@@ -137,36 +137,38 @@ export default function Admin() {
           <FormControl fullWidth>
             <InputLabel id="station-label">Station</InputLabel>
             <Select
-              disabled={!busNumber || !route}
+              disabled={!busName || !routeName}
               labelId="station-label"
-              value={station}
+              value={stationName}
               label="Station"
               onChange={handleChangeStation}
             >
               {Object.values(
                 reports
-                  .filter((item) => item.routeId === route)
+                  .filter((item) => item.routeName === routeName)
                   .reduce((acc, report) => {
-                    if (!acc[report.stationId]) {
-                      acc[report.stationId] = report;
+                    if (!acc[report.stationName]) {
+                      acc[report.stationName] = report;
                     }
                     return acc;
                   }, {})
-              ).map((item) => (
-                <MenuItem key={item.reportId} value={item.stationId}>
-                  {item.stationName}
-                </MenuItem>
-              ))}
+              )
+                .sort((a, b) => a.stationName.localeCompare(b.stationName))
+                .map((item) => (
+                  <MenuItem key={item.reportId} value={item.stationName}>
+                    {item.stationName}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
         </Paper>
       </Box>
-      {busNumber && route && station && (
+      {busName && routeName && stationName && (
         <Chart
           reports={reports}
-          busNumber={busNumber}
-          route={route}
-          station={station}
+          busName={busName}
+          routeName={routeName}
+          stationName={stationName}
         />
       )}
     </>

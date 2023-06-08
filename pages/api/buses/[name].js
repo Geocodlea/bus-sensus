@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   try {
     await dbConnect();
 
-    const results = await Route.find({ bus_id: req.query.id });
+    const results = await Route.find({ busName: req.query.name });
 
     if (!results) {
       return res.status(404).json({ error: "No routes found" });
